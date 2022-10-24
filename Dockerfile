@@ -17,6 +17,4 @@ RUN apk add --no-cache ca-certificates && update-ca-certificates
 WORKDIR /
 COPY --from=build /avito-internship /avito-internship
 EXPOSE 8080
-#USER nonroot:nonroot
-#RUN ["chmod", "+x", "/avito-internship"]
 ENTRYPOINT ["/avito-internship"]
