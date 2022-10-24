@@ -3,8 +3,8 @@ create table "user"
     id            serial
         constraint user_pk
             primary key,
-    name          varchar       not null,
-    balance_value int default 0 not null
+    name          varchar                    not null,
+    balance_value double precision default 0 not null
 );
 
 create unique index user_name_uindex
@@ -16,8 +16,8 @@ create table service
     id    serial
         constraint service_pk
             primary key,
-    name  varchar           not null,
-    prive integer default 0 not null
+    name  varchar                    not null,
+    prive double precision default 0 not null
 );
 
 
@@ -58,7 +58,7 @@ create table reserve
         constraint reserve_order_id_fk
             references "order"
             on update cascade on delete cascade,
-    value      integer               not null,
+    value      double precision      not null,
     created_at timestamp             not null,
     is_debited boolean default false not null
 );
