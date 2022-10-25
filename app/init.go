@@ -13,7 +13,7 @@ var DataBase *sql.DB
 
 func db() {
 	dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
-		"localhost", 5432, os.Getenv("POSTGRES_USER"), os.Getenv("POSTGRES_PASSWORD"), "balance_db")
+		"database", 5432, os.Getenv("POSTGRES_USER"), os.Getenv("POSTGRES_PASSWORD"), "balance_db")
 	var err error
 	DataBase, err = sql.Open("postgres", dsn)
 	if err != nil {
