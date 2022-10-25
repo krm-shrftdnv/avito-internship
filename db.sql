@@ -3,12 +3,9 @@ create table "user"
     id            serial
         constraint user_pk
             primary key,
-    name          varchar                    not null,
+    name          varchar,
     balance_value double precision default 0 not null
 );
-
-create unique index user_name_uindex
-    on "user" (name);
 
 
 create table service
@@ -17,7 +14,7 @@ create table service
         constraint service_pk
             primary key,
     name  varchar                    not null,
-    prive double precision default 0 not null
+    price double precision default 0 not null
 );
 
 

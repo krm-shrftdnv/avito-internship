@@ -2,8 +2,8 @@ package main
 
 import (
 	"avito-internship/app"
+	"avito-internship/handler"
 	"fmt"
-	"github.com/gofiber/fiber/v2"
 	"log"
 	"os"
 )
@@ -18,17 +18,17 @@ func main() {
 
 	app.Init()
 
-	fiberApp := fiber.New()
-	fiberApp.Get("/balance", GetBalance)
-	fiberApp.Post("/balance/add", AddBalance)
-	fiberApp.Post("/reserve", Reserve)
-	fiberApp.Post("/reserve/approve", ApproveReserve)
-	fiberApp.Get("/report", GetReport)
-	fiberApp.Get("/transactions", GetTransactions)
+	app.FiberApp.Get("/balance", handler.GetBalance)
+	app.FiberApp.Post("/balance/add", handler.AddBalance)
+	app.FiberApp.Post("/reserve", handler.Reserve)
+	app.FiberApp.Post("/reserve/approve", handler.ApproveReserve)
+	app.FiberApp.Get("/report", handler.GetReport)
+	app.FiberApp.Get("/transactions", handler.GetTransactions)
 
 	port := os.Getenv("SERVER_PORT")
 	if port == "" {
-		port = "3000"
+		port = "3000" // docker
+		//port = "3001" // todo: not push debug
 	}
-	log.Fatalln(fiberApp.Listen(fmt.Sprintf(":%v", port)))
+	log.Fatalln(app.FiberApp.Listen(fmt.Sprintf(":%v", port)))
 }
