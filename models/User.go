@@ -9,11 +9,8 @@ type User struct {
 }
 
 func (user User) GetById(transaction *sql.Tx) (*User, error) {
-	rows, err := transaction.Query("select * from user where id = ?", user.Id)
-	if err != nil {
-		return nil, err
-	}
-	err = rows.Scan(&user.Id, &user.Name, &user.BalanceValue)
+	row := transaction.QueryRow("select * from \"user\" where id = $1", user.Id)
+	err := row.Scan(&user.Id, &user.Name, &user.BalanceValue)
 	if err != nil {
 		return nil, err
 	}

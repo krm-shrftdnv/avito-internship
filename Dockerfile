@@ -8,8 +8,8 @@ WORKDIR /app
 COPY go.mod ./
 COPY go.sum ./
 RUN go mod download
-COPY *.go ./
-RUN go build -o /avito-internship
+COPY . .
+RUN go build -o /avito-internship .
 
 ## Deploy
 FROM alpine
