@@ -1,4 +1,4 @@
-package main
+package app
 
 import (
 	"database/sql"
@@ -8,12 +8,13 @@ import (
 	"os"
 )
 
-var DataBase *sql.Conn
+var DataBase *sql.DB
 
 func db() {
 	dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
 		"database", 5432, os.Getenv("POSTGRES_USER"), os.Getenv("POSTGRES_PASSWORD"), "balance_db")
-	DataBase, err := sql.Open("postgres", dsn)
+	var err error
+	DataBase, err = sql.Open("postgres", dsn)
 	if err != nil {
 		log.Fatalln(fmt.Errorf("failed initialize db. %s", err.Error()))
 	}
