@@ -16,5 +16,5 @@ FROM alpine
 RUN apk add --no-cache ca-certificates && update-ca-certificates
 WORKDIR /
 COPY --from=build /avito-internship /avito-internship
-EXPOSE 8080
+EXPOSE ${SERVER_PORT}
 ENTRYPOINT ["/avito-internship"]

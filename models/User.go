@@ -1,7 +1,7 @@
 package models
 
 type User struct {
-	Id           int32
-	Name         string
-	BalanceValue float32
+	Id           int32   `json:"id"`
+	Name         string  `json:"name"`
+	BalanceValue float32 `json:"balance_value"`
 }
