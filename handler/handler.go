@@ -77,6 +77,7 @@ func AddBalance(c *fiber.Ctx) (err error) {
 		}
 	}
 	userModel.BalanceValue += user.BalanceValue
+	// todo: add operation
 	err = userModel.Save(transaction)
 	if err != nil {
 		tErr := transaction.Rollback()
@@ -152,6 +153,7 @@ func Reserve(c *fiber.Ctx) (err error) {
 
 		return errors.Wrap(err, "")
 	}
+	// todo: add operation
 	err = transaction.Commit()
 	if err != nil {
 		return errors.Wrap(err, "")
@@ -168,8 +170,8 @@ func ApproveReserve(c *fiber.Ctx) (err error) {
 	if err != nil {
 		return errors.Wrap(err, "")
 	}
-	reserve := &models.Reserve{OrderId: int32(form.OrderId)}
-	reserve, err = reserve.GetByOrderId(transaction)
+	reserve := &models.Reserve{OrderId: int32(form.OrderId), ServiceId: int32(form.ServiceId)}
+	reserve, err = reserve.GetByOrderIdAndServiceId(transaction)
 	if err != nil {
 		tErr := transaction.Rollback()
 		if tErr != nil {

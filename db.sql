@@ -44,3 +44,20 @@ create unique index reserve_order_id_uindex
 
 create index reserve_service_id_index
     on reserve (service_id);
+
+
+create table operation
+(
+    id         serial
+        constraint operation_pk
+            primary key,
+    user_id    integer               not null
+        constraint operation_user_id_fk
+            references "user",
+    created_at timestamp             not null,
+    increase   boolean default false not null,
+    value      double precision      not null
+);
+
+create index operation_user_id_index
+    on operation (user_id);

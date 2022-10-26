@@ -24,8 +24,8 @@ func (reserve *Reserve) GetById(transaction *sql.Tx) (*Reserve, error) {
 	return reserve, nil
 }
 
-func (reserve *Reserve) GetByOrderId(transaction *sql.Tx) (*Reserve, error) {
-	row := transaction.QueryRow("select * from reserve where order_id = $1", reserve.OrderId)
+func (reserve *Reserve) GetByOrderIdAndServiceId(transaction *sql.Tx) (*Reserve, error) {
+	row := transaction.QueryRow("select * from reserve where order_id = $1 and service_id = $2", reserve.OrderId, reserve.ServiceId)
 	err := row.Scan(&reserve.Id, &reserve.UserId, &reserve.OrderId, &reserve.Value, &reserve.CreatedAt, &reserve.IsDebited, &reserve.ServiceId)
 	if err != nil {
 		return nil, err

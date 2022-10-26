@@ -27,8 +27,8 @@ func main() {
 
 	port := os.Getenv("SERVER_PORT")
 	if port == "" {
-		//port = "3000" // docker
-		port = "3001" // todo: not push debug
+		port = "3000" // docker
+		//port = "3001" // todo: not push debug
 	}
 	log.Fatalln(app.FiberApp.Listen(fmt.Sprintf(":%v", port)))
 }
