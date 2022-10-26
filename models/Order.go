@@ -14,60 +14,58 @@ type Order struct {
 }
 
 func (order Order) GetById(transaction *sql.Tx) (*Order, error) {
-	//row := transaction.QueryRow("select * from \"order\" where id = $1", order.Id)
-	//err := row.Scan(&order.Id, &order.UserId, &order.OrderId, &order.Value, &order.CreatedAt, &order.IsDebited)
-	//if err != nil {
-	//	return nil, err
-	//}
-	//return &order, nil
-	return nil, nil
+	row := transaction.QueryRow("select * from \"order\" where id = $1", order.Id)
+	err := row.Scan(&order.Id, &order.UserId, &order.ServiceId, &order.CreatedAt, &order.IsPaid)
+	if err != nil {
+		return nil, err
+	}
+	return &order, nil
 }
 
 func (order Order) Save(transaction *sql.Tx) (err error) {
-	//if order.Id == 0 {
-	//	order.IsDebited = false
-	//	order.CreatedAt = time.Now()
-	//	_, err := transaction.Exec(
-	//		"insert into \"order\" (user_id, order_id, value, created_at, is_debited) values ($1, $2, $3, $4, $5)",
-	//		order.UserId,
-	//		order.OrderId,
-	//		order.Value,
-	//		order.CreatedAt,
-	//		order.IsDebited,
-	//	)
-	//	if err != nil {
-	//		return err
-	//	}
-	//} else {
-	//	reserveModel, err := order.GetById(transaction)
-	//	if err == sql.ErrNoRows {
-	//		order.IsDebited = false
-	//		order.CreatedAt = time.Now()
-	//		_, err := transaction.Exec(
-	//			"insert into \"order\" (id, user_id, order_id, value, created_at, is_debited) values ($1, $2, $3, $4, $5, $6)",
-	//			order.Id,
-	//			order.UserId,
-	//			order.OrderId,
-	//			order.Value,
-	//			order.CreatedAt,
-	//			order.IsDebited,
-	//		)
-	//		if err != nil {
-	//			return err
-	//		}
-	//	} else {
-	//		_, err = transaction.Exec(
-	//			"update \"order\" set user_id = $1, order_id = $2, value=$3, is_debited=$4 where id = $5",
-	//			order.UserId,
-	//			order.OrderId,
-	//			order.Value,
-	//			order.IsDebited,
-	//			reserveModel.Id,
-	//		)
-	//		if err != nil {
-	//			return err
-	//		}
-	//	}
-	//}
+	if order.Id == 0 {
+		order.IsPaid = false
+		order.CreatedAt = time.Now()
+		var id int
+		err = transaction.QueryRow(
+			"insert into \"order\" (user_id, service_id, created_at, is_paid) values ($1, $2, $3, $4) returning id",
+			order.UserId,
+			order.ServiceId,
+			order.CreatedAt,
+			order.IsPaid,
+		).Scan(&id)
+		if err != nil {
+			return err
+		}
+		order.Id = int32(id)
+	} else {
+		orderModel, err := order.GetById(transaction)
+		if err == sql.ErrNoRows {
+			order.IsPaid = false
+			order.CreatedAt = time.Now()
+			err = transaction.QueryRow(
+				"insert into \"order\" (id, user_id, service_id, created_at, is_paid) values ($1, $2, $3, $4, $5) returning id",
+				order.Id,
+				order.UserId,
+				order.ServiceId,
+				order.CreatedAt,
+				order.IsPaid,
+			).Scan(&order.Id)
+			if err != nil {
+				return err
+			}
+		} else {
+			_, err = transaction.Exec(
+				"update \"order\" set user_id = $1, service_id = $2, is_paid=$3 where id = $4",
+				order.UserId,
+				order.ServiceId,
+				order.IsPaid,
+				orderModel.Id,
+			)
+			if err != nil {
+				return err
+			}
+		}
+	}
 	return nil
 }

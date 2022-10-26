@@ -27,14 +27,14 @@ func (reserve Reserve) Save(transaction *sql.Tx) (err error) {
 	if reserve.Id == 0 {
 		reserve.IsDebited = false
 		reserve.CreatedAt = time.Now()
-		_, err := transaction.Exec(
-			"insert into reserve (user_id, order_id, value, created_at, is_debited) values ($1, $2, $3, $4, $5)",
+		err = transaction.QueryRow(
+			"insert into reserve (user_id, order_id, value, created_at, is_debited) values ($1, $2, $3, $4, $5) returning id",
 			reserve.UserId,
 			reserve.OrderId,
 			reserve.Value,
 			reserve.CreatedAt,
 			reserve.IsDebited,
-		)
+		).Scan(&reserve.Id)
 		if err != nil {
 			return err
 		}
@@ -43,15 +43,15 @@ func (reserve Reserve) Save(transaction *sql.Tx) (err error) {
 		if err == sql.ErrNoRows {
 			reserve.IsDebited = false
 			reserve.CreatedAt = time.Now()
-			_, err := transaction.Exec(
-				"insert into reserve (id, user_id, order_id, value, created_at, is_debited) values ($1, $2, $3, $4, $5, $6)",
+			err = transaction.QueryRow(
+				"insert into reserve (id, user_id, order_id, value, created_at, is_debited) values ($1, $2, $3, $4, $5, $6) returning id",
 				reserve.Id,
 				reserve.UserId,
 				reserve.OrderId,
 				reserve.Value,
 				reserve.CreatedAt,
 				reserve.IsDebited,
-			)
+			).Scan(&reserve.Id)
 			if err != nil {
 				return err
 			}

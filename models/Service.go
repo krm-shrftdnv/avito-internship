@@ -21,14 +21,18 @@ func (service Service) GetById(transaction *sql.Tx) (*Service, error) {
 
 func (service Service) Save(transaction *sql.Tx) (err error) {
 	if service.Id == 0 {
-		_, err := transaction.Exec("insert into service (name, price) values ($1, $2)", service.Name, service.Price)
+		err = transaction.
+			QueryRow("insert into service (name, price) values ($1, $2) returning id", service.Name, service.Price).
+			Scan(&service.Id)
 		if err != nil {
 			return err
 		}
 	} else {
 		userModel, err := service.GetById(transaction)
 		if err == sql.ErrNoRows {
-			_, err = transaction.Exec("insert into service (id, name, price) values ($1, $2, $3)", service.Id, service.Name, service.Price)
+			err = transaction.
+				QueryRow("insert into service (id, name, price) values ($1, $2, $3) returning id", service.Id, service.Name, service.Price).
+				Scan(&service.Id)
 			if err != nil {
 				return err
 			}

@@ -153,6 +153,10 @@ func Reserve(c *fiber.Ctx) (err error) {
 
 		return errors.Wrap(err, "")
 	}
+	err = transaction.Commit()
+	if err != nil {
+		return errors.Wrap(err, "")
+	}
 	return nil
 }
 

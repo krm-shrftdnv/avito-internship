@@ -19,14 +19,18 @@ func (user User) GetById(transaction *sql.Tx) (*User, error) {
 
 func (user User) Save(transaction *sql.Tx) (err error) {
 	if user.Id == 0 {
-		_, err := transaction.Exec("insert into \"user\" (name, balance_value) values ($1, $2)", user.Name, user.BalanceValue)
+		err = transaction.
+			QueryRow("insert into \"user\" (name, balance_value) values ($1, $2) returning id", user.Name, user.BalanceValue).
+			Scan(&user.Id)
 		if err != nil {
 			return err
 		}
 	} else {
 		userModel, err := user.GetById(transaction)
 		if err == sql.ErrNoRows {
-			_, err = transaction.Exec("insert into \"user\" (id, name, balance_value) values ($1, $2, $3)", user.Id, user.Name, user.BalanceValue)
+			err = transaction.
+				QueryRow("insert into \"user\" (id, name, balance_value) values ($1, $2, $3) returning id", user.Id, user.Name, user.BalanceValue).
+				Scan(&user.Id)
 			if err != nil {
 				return err
 			}

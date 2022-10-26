@@ -40,7 +40,7 @@ func db() {
 	}
 	err = DataBase.Ping()
 	if err != nil {
-		log.Fatalln(fmt.Errorf("failed ping db. %s", err.Error()))
+		log.Println(fmt.Errorf("failed ping db. %s", err.Error()))
 	}
 	log.Println("Database connection established")
 }
