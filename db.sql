@@ -18,30 +18,6 @@ create table service
 );
 
 
-create table "order"
-(
-    id         serial
-        constraint order_pk
-            primary key,
-    user_id    integer               not null
-        constraint order_user_id_fk
-            references "user"
-            on update cascade on delete cascade,
-    service_id integer               not null
-        constraint order_service_id_fk
-            references service
-            on update cascade on delete cascade,
-    created_at timestamp             not null,
-    is_paid    boolean default false not null
-);
-
-create index order_service_id_index
-    on "order" (service_id);
-
-create index order_user_id_index
-    on "order" (user_id);
-
-
 create table reserve
 (
     id         serial
@@ -51,18 +27,20 @@ create table reserve
         constraint reserve_user_id_fk
             references "user"
             on update cascade on delete cascade,
-    order_id   integer               not null
-        constraint reserve_order_id_fk
-            references "order"
-            on update cascade on delete cascade,
+    order_id   integer               not null,
     value      double precision      not null,
     created_at timestamp             not null,
-    is_debited boolean default false not null
+    is_debited boolean default false not null,
+    service_id integer               not null
+        constraint reserve_service_id_fk
+            references service
 );
-
-create index reserve_order_id_index
-    on reserve (order_id);
 
 create index reserve_user_id_index
     on reserve (user_id);
 
+create unique index reserve_order_id_uindex
+    on reserve (order_id);
+
+create index reserve_service_id_index
+    on reserve (service_id);

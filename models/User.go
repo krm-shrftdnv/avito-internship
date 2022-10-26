@@ -8,16 +8,16 @@ type User struct {
 	BalanceValue float32 `json:"balance"`
 }
 
-func (user User) GetById(transaction *sql.Tx) (*User, error) {
+func (user *User) GetById(transaction *sql.Tx) (*User, error) {
 	row := transaction.QueryRow("select * from \"user\" where id = $1", user.Id)
 	err := row.Scan(&user.Id, &user.Name, &user.BalanceValue)
 	if err != nil {
 		return nil, err
 	}
-	return &user, nil
+	return user, nil
 }
 
-func (user User) Save(transaction *sql.Tx) (err error) {
+func (user *User) Save(transaction *sql.Tx) (err error) {
 	if user.Id == 0 {
 		err = transaction.
 			QueryRow("insert into \"user\" (name, balance_value) values ($1, $2) returning id", user.Name, user.BalanceValue).
@@ -26,7 +26,8 @@ func (user User) Save(transaction *sql.Tx) (err error) {
 			return err
 		}
 	} else {
-		userModel, err := user.GetById(transaction)
+		userModel := &User{Id: user.Id}
+		userModel, err := userModel.GetById(transaction)
 		if err == sql.ErrNoRows {
 			err = transaction.
 				QueryRow("insert into \"user\" (id, name, balance_value) values ($1, $2, $3) returning id", user.Id, user.Name, user.BalanceValue).

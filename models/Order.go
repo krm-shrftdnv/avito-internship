@@ -13,33 +13,32 @@ type Order struct {
 	IsPaid    bool      `json:"is_paid"`
 }
 
-func (order Order) GetById(transaction *sql.Tx) (*Order, error) {
+func (order *Order) GetById(transaction *sql.Tx) (*Order, error) {
 	row := transaction.QueryRow("select * from \"order\" where id = $1", order.Id)
 	err := row.Scan(&order.Id, &order.UserId, &order.ServiceId, &order.CreatedAt, &order.IsPaid)
 	if err != nil {
 		return nil, err
 	}
-	return &order, nil
+	return order, nil
 }
 
-func (order Order) Save(transaction *sql.Tx) (err error) {
+func (order *Order) Save(transaction *sql.Tx) (err error) {
 	if order.Id == 0 {
 		order.IsPaid = false
 		order.CreatedAt = time.Now()
-		var id int
 		err = transaction.QueryRow(
 			"insert into \"order\" (user_id, service_id, created_at, is_paid) values ($1, $2, $3, $4) returning id",
 			order.UserId,
 			order.ServiceId,
 			order.CreatedAt,
 			order.IsPaid,
-		).Scan(&id)
+		).Scan(&order.Id)
 		if err != nil {
 			return err
 		}
-		order.Id = int32(id)
 	} else {
-		orderModel, err := order.GetById(transaction)
+		orderModel := &Order{Id: order.Id}
+		orderModel, err := orderModel.GetById(transaction)
 		if err == sql.ErrNoRows {
 			order.IsPaid = false
 			order.CreatedAt = time.Now()
