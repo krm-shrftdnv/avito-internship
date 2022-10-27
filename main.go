@@ -22,7 +22,8 @@ func main() {
 	app.FiberApp.Post("/balance/add", handler.AddBalance)
 	app.FiberApp.Post("/reserve", handler.Reserve)
 	app.FiberApp.Post("/reserve/approve", handler.ApproveReserve)
-	app.FiberApp.Get("/report", handler.GetReport)
+	app.FiberApp.Get("/report/create", handler.GetReport)
+	app.FiberApp.Get("/report/:filename", handler.DownloadReport)
 	app.FiberApp.Get("/transactions", handler.GetTransactions)
 
 	port := os.Getenv("SERVER_PORT")

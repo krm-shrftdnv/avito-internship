@@ -4,10 +4,14 @@ import (
 	"avito-internship/app"
 	"avito-internship/models"
 	"database/sql"
+	"encoding/csv"
+	"fmt"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/pkg/errors"
 	"log"
+	"os"
+	"path/filepath"
 	"strconv"
 )
 
@@ -29,6 +33,24 @@ type ValidationError struct {
 	FailedField string
 	Tag         string
 	Value       string
+}
+
+type ReportParams struct {
+	Year  int32 `json:"year" validation:"required,numeric,min=0,max=9999"`
+	Month int32 `json:"month" validation:"required,numeric,min=1,max=12"`
+}
+
+type ReportRow struct {
+	Sum  float32 `json:"sum"`
+	Name string  `json:"name"`
+}
+
+type ReportUrl struct {
+	Url string `json:"url"`
+}
+
+func (reportRow *ReportRow) toString() []string {
+	return []string{strconv.FormatFloat(float64(reportRow.Sum), 'f', 2, 64), reportRow.Name}
 }
 
 func validate(s interface{}) []*ValidationError {
@@ -109,7 +131,6 @@ func AddBalance(c *fiber.Ctx) (err error) {
 		}
 	}
 	userModel.BalanceValue += user.BalanceValue
-	// todo: add operation
 	err = userModel.Save(transaction)
 	if err != nil {
 		tErr := transaction.Rollback()
@@ -119,6 +140,21 @@ func AddBalance(c *fiber.Ctx) (err error) {
 
 		return errors.Wrap(err, "")
 	}
+	operation := models.Operation{
+		UserId:     userModel.Id,
+		IsIncrease: true,
+		Value:      user.BalanceValue,
+	}
+	err = operation.Save(transaction)
+	if err != nil {
+		tErr := transaction.Rollback()
+		if tErr != nil {
+			return errors.Wrap(tErr, "")
+		}
+
+		return errors.Wrap(err, "")
+	}
+
 	err = transaction.Commit()
 	if err != nil {
 		return errors.Wrap(err, "")
@@ -192,7 +228,6 @@ func Reserve(c *fiber.Ctx) (err error) {
 
 		return errors.Wrap(err, "")
 	}
-	// todo: add operation
 	err = transaction.Commit()
 	if err != nil {
 		return errors.Wrap(err, "")
@@ -255,6 +290,21 @@ func ApproveReserve(c *fiber.Ctx) (err error) {
 		log.Println(err)
 		return fiber.NewError(fiber.StatusInternalServerError, "Error while updating reserve. Try again")
 	}
+	operation := models.Operation{
+		UserId:     int32(form.UserId),
+		IsIncrease: false,
+		Value:      form.Sum,
+	}
+	err = operation.Save(transaction)
+	if err != nil {
+		tErr := transaction.Rollback()
+		if tErr != nil {
+			return errors.Wrap(tErr, "")
+		}
+
+		return errors.Wrap(err, "")
+	}
+
 	err = transaction.Commit()
 	if err != nil {
 		return errors.Wrap(err, "")
@@ -263,7 +313,117 @@ func ApproveReserve(c *fiber.Ctx) (err error) {
 }
 
 func GetReport(c *fiber.Ctx) (err error) {
-	return nil
+	year, err := strconv.Atoi(c.Query("year"))
+	if err != nil {
+		return errors.Wrap(err, "")
+	}
+	month, err := strconv.Atoi(c.Query("month"))
+	if err != nil {
+		return errors.Wrap(err, "")
+	}
+	reportParams := ReportParams{Year: int32(year), Month: int32(month)}
+	errs := validate(reportParams)
+	if errs != nil {
+		return c.
+			Status(fiber.StatusUnprocessableEntity).
+			JSON(app.ResponseBody{Error: app.Error{Code: fiber.StatusUnprocessableEntity, Fields: errs}})
+	}
+
+	transaction, err := app.DataBase.Begin()
+	if err != nil {
+		return errors.Wrap(err, "")
+	}
+	rows, err := transaction.
+		Query(
+			"select sum(r.value) as sum, s.name as name from reserve r left join service s on r.service_id = s.id where created_at between ($1 || '-' || $2 || '-01 00:00:00')::timestamp and date_trunc('month', ($1 || '-' || $2 || '-01 00:00:00')::timestamp) + interval '1 month - 1 day' group by s.id;",
+			reportParams.Year,
+			reportParams.Month,
+		)
+	if err != nil {
+		tErr := transaction.Rollback()
+		if tErr != nil {
+			return errors.Wrap(tErr, "")
+		}
+
+		return errors.Wrap(err, "")
+	}
+	directory := "./reports"
+	fileName := fmt.Sprintf("%d-%d_services_report.csv", reportParams.Year, reportParams.Month)
+	file, err := os.Create(filepath.Join(directory, fileName))
+	if err != nil {
+		err = os.Mkdir(directory, 0777)
+		if err != nil {
+			tErr := transaction.Rollback()
+			if tErr != nil {
+				return errors.Wrap(tErr, "")
+			}
+			return fiber.NewError(fiber.StatusInternalServerError, "Error while forming report")
+		} else {
+			file, err = os.Create(filepath.Join(directory, fileName))
+			if err != nil {
+				tErr := transaction.Rollback()
+				if tErr != nil {
+					return errors.Wrap(tErr, "")
+				}
+				return fiber.NewError(fiber.StatusInternalServerError, "Error while forming report")
+			}
+		}
+	}
+	writer := csv.NewWriter(file)
+	err = writer.Write([]string{"Название услуги", "Общая сумма выручки за отчётный период"})
+	if err != nil {
+		tErr := transaction.Rollback()
+		if tErr != nil {
+			return errors.Wrap(tErr, "")
+		}
+		return fiber.NewError(fiber.StatusInternalServerError, "Error while forming report")
+	}
+
+	for rows.Next() {
+		reportRow := ReportRow{}
+		err = rows.Scan(&reportRow.Sum, &reportRow.Name)
+		if err != nil {
+			log.Println(err)
+			continue
+		}
+		err = writer.Write(reportRow.toString())
+		if err != nil {
+			log.Println(err)
+			continue
+		}
+	}
+	writer.Flush()
+	if writer.Error() != nil {
+		tErr := transaction.Rollback()
+		if tErr != nil {
+			return errors.Wrap(tErr, "")
+		}
+		return fiber.NewError(fiber.StatusInternalServerError, "Error while forming report")
+	}
+	err = transaction.Commit()
+	if err != nil {
+		return errors.Wrap(err, "")
+	}
+
+	host := c.Hostname()
+	url := fmt.Sprintf("%s/report/%s", host, fileName)
+	return c.JSON(app.ResponseBody{Data: ReportUrl{Url: url}})
+}
+
+func DownloadReport(c *fiber.Ctx) (err error) {
+	directory := "./reports"
+	fileName := c.Params("filename")
+	if fileName == "" {
+		return fiber.NewError(fiber.StatusBadRequest, "Filename is required")
+	}
+	_, err = os.Open(filepath.Join(directory, fileName))
+	if err != nil {
+		if os.IsNotExist(err) {
+			return fiber.NewError(fiber.StatusNotFound, "Report not found")
+		}
+		return errors.Wrap(err, "")
+	}
+	return c.Download(filepath.Join(directory, fileName))
 }
 
 func GetTransactions(c *fiber.Ctx) (err error) {
