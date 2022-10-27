@@ -55,7 +55,7 @@ create table operation
         constraint operation_user_id_fk
             references "user",
     created_at timestamp             not null,
-    increase   boolean default false not null,
+    is_increase   boolean default false not null,
     value      double precision      not null
 );
 

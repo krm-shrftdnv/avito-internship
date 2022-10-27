@@ -2,6 +2,8 @@ package models
 
 import (
 	"database/sql"
+	"fmt"
+	"log"
 	"time"
 )
 
@@ -20,6 +22,47 @@ func (operation *Operation) GetById(transaction *sql.Tx) (*Operation, error) {
 		return nil, err
 	}
 	return operation, nil
+}
+
+func (operation *Operation) GetByUserId(transaction *sql.Tx, page int, perPage int, sort string, sortDir string) (operations []Operation, err error) {
+	switch sortDir {
+	case "desc", "DESC":
+		sortDir = "desc"
+		break
+	default:
+		sortDir = "asc"
+	}
+	switch sort {
+	case "created_at":
+		sort = "created_at"
+		break
+	case "value":
+		sort = "value"
+		break
+	default:
+		sort = "id"
+	}
+	var query string
+	query = fmt.Sprintf("select * from operation where user_id = $1 order by %s %s limit $2 offset $3", sort, sortDir)
+	rows, err := transaction.Query(
+		query,
+		operation.UserId,
+		perPage,
+		perPage*(page-1),
+	)
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		operationModel := Operation{}
+		err := rows.Scan(&operationModel.Id, &operationModel.UserId, &operationModel.CreatedAt, &operationModel.IsIncrease, &operationModel.Value)
+		if err != nil {
+			log.Println(err)
+			continue
+		}
+		operations = append(operations, operationModel)
+	}
+	return operations, nil
 }
 
 func (operation *Operation) Save(transaction *sql.Tx) (err error) {

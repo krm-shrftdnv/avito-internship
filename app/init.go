@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 	"log"
@@ -66,6 +67,7 @@ func fiberInit() {
 			return nil
 		},
 	})
+	FiberApp.Use(recover.New())
 }
 
 func validatorInit() {

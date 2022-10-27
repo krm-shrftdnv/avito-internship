@@ -49,6 +49,13 @@ type ReportUrl struct {
 	Url string `json:"url"`
 }
 
+type OperationsFilter struct {
+	Page    int    `validation:"numeric,min=1"`
+	PerPage int    `validation:"numeric,min=1"`
+	Sort    string `validation:"oneof=value created_at"`
+	SortDir string `validation:"oneof=asc desc"`
+}
+
 func (reportRow *ReportRow) toString() []string {
 	return []string{strconv.FormatFloat(float64(reportRow.Sum), 'f', 2, 64), reportRow.Name}
 }
@@ -69,7 +76,7 @@ func validate(s interface{}) []*ValidationError {
 }
 
 func GetBalance(c *fiber.Ctx) (err error) {
-	id, err := strconv.Atoi(c.Query("id"))
+	id, err := strconv.Atoi(c.Params("userId"))
 	if err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, "User Id is required")
 	}
@@ -315,11 +322,11 @@ func ApproveReserve(c *fiber.Ctx) (err error) {
 func GetReport(c *fiber.Ctx) (err error) {
 	year, err := strconv.Atoi(c.Query("year"))
 	if err != nil {
-		return errors.Wrap(err, "")
+		return errors.Wrap(err, "Incorrect year")
 	}
 	month, err := strconv.Atoi(c.Query("month"))
 	if err != nil {
-		return errors.Wrap(err, "")
+		return errors.Wrap(err, "Incorrect month")
 	}
 	reportParams := ReportParams{Year: int32(year), Month: int32(month)}
 	errs := validate(reportParams)
@@ -426,6 +433,76 @@ func DownloadReport(c *fiber.Ctx) (err error) {
 	return c.Download(filepath.Join(directory, fileName))
 }
 
-func GetTransactions(c *fiber.Ctx) (err error) {
-	return nil
+func GetOperations(c *fiber.Ctx) (err error) {
+	id, err := strconv.Atoi(c.Params("userId"))
+	if err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, "User Id is required")
+	}
+	page, err := strconv.Atoi(c.Query("page"))
+	if err != nil {
+		page = 1
+	}
+	perPage, err := strconv.Atoi(c.Query("per-page"))
+	if err != nil {
+		perPage = 10
+	}
+	sort := c.Query("sort")
+	if sort == "" {
+		sort = "created_at"
+	}
+	sortDir := c.Query("sort-dir")
+	if sortDir == "" {
+		sortDir = "asc"
+	}
+	operationsFilter := OperationsFilter{
+		Page:    page,
+		PerPage: perPage,
+		Sort:    sort,
+		SortDir: sortDir,
+	}
+	errs := validate(operationsFilter)
+	if errs != nil {
+		return c.
+			Status(fiber.StatusUnprocessableEntity).
+			JSON(app.ResponseBody{Error: app.Error{Code: fiber.StatusUnprocessableEntity, Fields: errs}})
+	}
+	transaction, err := app.DataBase.Begin()
+	if err != nil {
+		return errors.Wrap(err, "")
+	}
+	userModel := models.User{Id: int32(id)}
+	user, err := userModel.GetById(transaction)
+	if err != nil {
+		tErr := transaction.Rollback()
+		if tErr != nil {
+			return errors.Wrap(tErr, "")
+		}
+
+		if err == sql.ErrNoRows {
+			return fiber.NewError(fiber.StatusNotFound, "User not found")
+		}
+		return errors.Wrap(err, "")
+	}
+	operation := models.Operation{UserId: user.Id}
+	operations, err := operation.GetByUserId(
+		transaction,
+		operationsFilter.Page,
+		operationsFilter.PerPage,
+		operationsFilter.Sort,
+		operationsFilter.SortDir,
+	)
+	if err != nil {
+		tErr := transaction.Rollback()
+		if tErr != nil {
+			return errors.Wrap(tErr, "")
+		}
+
+		return errors.Wrap(err, "")
+	}
+
+	err = transaction.Commit()
+	if err != nil {
+		return errors.Wrap(err, "")
+	}
+	return c.JSON(app.ResponseBody{Data: operations})
 }
