@@ -1,11 +1,13 @@
 package models
 
-import "database/sql"
+import (
+	"database/sql"
+)
 
 type User struct {
-	Id           int32   `json:"id"`
+	Id           int32   `json:"id" validate:"required,numeric,min=1"`
 	Name         string  `json:"name"`
-	BalanceValue float32 `json:"balance"`
+	BalanceValue float32 `json:"balance" validate:"required,number,min=0"`
 }
 
 func (user *User) GetById(transaction *sql.Tx) (*User, error) {

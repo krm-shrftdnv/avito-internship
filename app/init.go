@@ -3,6 +3,7 @@ package app
 import (
 	"database/sql"
 	"fmt"
+	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
@@ -12,10 +13,12 @@ import (
 
 var DataBase *sql.DB
 var FiberApp *fiber.App
+var Validate *validator.Validate
 
 type Error struct {
-	Message string `json:"message"`
-	Code    int    `json:"code"`
+	Message string      `json:"message"`
+	Code    int         `json:"code"`
+	Fields  interface{} `json:"fields"`
 }
 
 type ResponseBody struct {
@@ -32,7 +35,7 @@ func env() {
 func db() {
 	dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
 		"database", 5432, os.Getenv("POSTGRES_USER"), os.Getenv("POSTGRES_PASSWORD"), "balance_db") // docker
-	//"localhost", 5433, os.Getenv("POSTGRES_USER"), os.Getenv("POSTGRES_PASSWORD"), "balance_db") // todo: not push debug
+	//"localhost", 5435, os.Getenv("POSTGRES_USER"), os.Getenv("POSTGRES_PASSWORD"), "balance_db") // todo: not push debug
 	var err error
 	DataBase, err = sql.Open("postgres", dsn)
 	if err != nil {
@@ -65,8 +68,13 @@ func fiberInit() {
 	})
 }
 
+func validatorInit() {
+	Validate = validator.New()
+}
+
 func Init() {
 	env()
 	db()
 	fiberInit()
+	validatorInit()
 }

@@ -4,6 +4,7 @@ import (
 	"avito-internship/app"
 	"avito-internship/models"
 	"database/sql"
+	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/pkg/errors"
 	"log"
@@ -11,25 +12,49 @@ import (
 )
 
 type ReserveForm struct {
-	UserId    int     `json:"id"`
-	ServiceId int     `json:"service_id"`
-	OrderId   int     `json:"order_id"`
-	Price     float32 `json:"price"`
+	UserId    int     `json:"id" validate:"required,numeric,min=1"`
+	ServiceId int     `json:"service_id" validate:"required,numeric,min=1"`
+	OrderId   int     `json:"order_id" validate:"required,numeric,min=1"`
+	Price     float32 `json:"price" validate:"required,number"`
 }
 
 type ReserveApproveForm struct {
-	UserId    int     `json:"id"`
-	ServiceId int     `json:"service_id"`
-	OrderId   int     `json:"order_id"`
-	Sum       float32 `json:"sum"`
+	UserId    int     `json:"id" validate:"required,numeric,min=1"`
+	ServiceId int     `json:"service_id" validate:"required,numeric,min=1"`
+	OrderId   int     `json:"order_id" validate:"required,numeric,min=1"`
+	Sum       float32 `json:"sum" validate:"required,number"`
+}
+
+type ValidationError struct {
+	FailedField string
+	Tag         string
+	Value       string
+}
+
+func validate(s interface{}) []*ValidationError {
+	var errs []*ValidationError
+	err := app.Validate.Struct(s)
+	if err != nil {
+		for _, err := range err.(validator.ValidationErrors) {
+			var element ValidationError
+			element.FailedField = err.StructNamespace()
+			element.Tag = err.Tag()
+			element.Value = err.Param()
+			errs = append(errs, &element)
+		}
+	}
+	return errs
 }
 
 func GetBalance(c *fiber.Ctx) (err error) {
+	id, err := strconv.Atoi(c.Query("id"))
+	if err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, "User Id is required")
+	}
 	transaction, err := app.DataBase.Begin()
 	if err != nil {
 		return errors.Wrap(err, "")
 	}
-	id, err := strconv.Atoi(c.Query("id"))
 	userModel := models.User{Id: int32(id)}
 	user, err := userModel.GetById(transaction)
 	if err != nil {
@@ -55,6 +80,13 @@ func AddBalance(c *fiber.Ctx) (err error) {
 	if err = c.BodyParser(user); err != nil {
 		return fiber.NewError(fiber.StatusUnprocessableEntity, err.Error())
 	}
+	errs := validate(user)
+	if errs != nil {
+		return c.
+			Status(fiber.StatusUnprocessableEntity).
+			JSON(app.ResponseBody{Error: app.Error{Code: fiber.StatusUnprocessableEntity, Fields: errs}})
+	}
+
 	transaction, err := app.DataBase.Begin()
 	if err != nil {
 		return errors.Wrap(err, "")
@@ -99,6 +131,13 @@ func Reserve(c *fiber.Ctx) (err error) {
 	if err = c.BodyParser(form); err != nil {
 		return fiber.NewError(fiber.StatusUnprocessableEntity, err.Error())
 	}
+	errs := validate(form)
+	if errs != nil {
+		return c.
+			Status(fiber.StatusUnprocessableEntity).
+			JSON(app.ResponseBody{Error: app.Error{Code: fiber.StatusUnprocessableEntity, Fields: errs}})
+	}
+
 	transaction, err := app.DataBase.Begin()
 	if err != nil {
 		return errors.Wrap(err, "")
@@ -166,6 +205,13 @@ func ApproveReserve(c *fiber.Ctx) (err error) {
 	if err = c.BodyParser(form); err != nil {
 		return fiber.NewError(fiber.StatusUnprocessableEntity, err.Error())
 	}
+	errs := validate(form)
+	if errs != nil {
+		return c.
+			Status(fiber.StatusUnprocessableEntity).
+			JSON(app.ResponseBody{Error: app.Error{Code: fiber.StatusUnprocessableEntity, Fields: errs}})
+	}
+
 	transaction, err := app.DataBase.Begin()
 	if err != nil {
 		return errors.Wrap(err, "")
