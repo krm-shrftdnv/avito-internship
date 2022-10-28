@@ -1,0 +1,1286 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0",
+    "title": "avito-internship",
+    "contact": {}
+  },
+  "host": "example.com",
+  "basePath": "/",
+  "securityDefinitions": {},
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/balance/1": {
+      "get": {
+        "summary": "Узнать баланс",
+        "tags": [
+          "Misc"
+        ],
+        "operationId": "Узнатьбаланс",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/%D0%A3%D0%B7%D0%BD%D0%B0%D1%82%D1%8C%D0%B1%D0%B0%D0%BB%D0%B0%D0%BD%D1%81"
+            },
+            "examples": {
+              "application/json": {
+                "data": {
+                  "id": 1,
+                  "name": "",
+                  "balance": 400
+                },
+                "error": null
+              }
+            },
+            "headers": {
+              "Date": {
+                "type": "string",
+                "default": "Thu, 27 Oct 2022 23:26:32 GMT"
+              },
+              "Content-Length": {
+                "type": "string",
+                "default": "54"
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/%D0%A3%D0%B7%D0%BD%D0%B0%D1%82%D1%8C%D0%B1%D0%B0%D0%BB%D0%B0%D0%BD%D1%81%28%D0%BF%D0%BE%D0%BB%D1%8C%D0%B7%D0%BE%D0%B2%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D0%B5%D0%BD%D0%B0%D0%B9%D0%B4%D0%B5%D0%BD%2911"
+            },
+            "examples": {
+              "application/json": {
+                "data": null,
+                "error": {
+                  "message": "User not found",
+                  "code": 404,
+                  "fields": null
+                }
+              }
+            },
+            "headers": {
+              "Date": {
+                "type": "string",
+                "default": "Thu, 27 Oct 2022 23:26:41 GMT"
+              },
+              "Content-Length": {
+                "type": "string",
+                "default": "75"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/balance/add": {
+      "post": {
+        "summary": "Пополнить баланс",
+        "tags": [
+          "Misc"
+        ],
+        "operationId": "Пополнитьбаланс",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Body",
+            "in": "body",
+            "required": true,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/%D0%9F%D0%BE%D0%BF%D0%BE%D0%BB%D0%BD%D0%B8%D1%82%D1%8C%D0%B1%D0%B0%D0%BB%D0%B0%D0%BD%D1%81Request"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/%D0%9F%D0%BE%D0%BF%D0%BE%D0%BB%D0%BD%D0%B8%D1%82%D1%8C%D0%B1%D0%B0%D0%BB%D0%B0%D0%BD%D1%81111"
+            },
+            "examples": {
+              "application/json": {
+                "data": {
+                  "id": 1,
+                  "name": "",
+                  "balance": 300
+                },
+                "error": null
+              }
+            },
+            "headers": {
+              "Date": {
+                "type": "string",
+                "default": "Thu, 27 Oct 2022 23:39:07 GMT"
+              },
+              "Content-Length": {
+                "type": "string",
+                "default": "54"
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "schema": {
+              "$ref": "#/definitions/%D0%9F%D0%BE%D0%BF%D0%BE%D0%BB%D0%BD%D0%B8%D1%82%D1%8C%D0%B1%D0%B0%D0%BB%D0%B0%D0%BD%D1%81%28%D0%BE%D1%82%D1%80%D0%B8%D1%86%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D0%BE%D0%B5%D0%BF%D0%BE%D0%BF%D0%BE%D0%BB%D0%BD%D0%B5%D0%BD%D0%B8%D0%B5%29113"
+            },
+            "examples": {
+              "application/json": {
+                "data": null,
+                "error": {
+                  "message": "",
+                  "code": 422,
+                  "fields": [
+                    {
+                      "FailedField": "User.BalanceValue",
+                      "Tag": "min",
+                      "Value": "0"
+                    }
+                  ]
+                }
+              }
+            },
+            "headers": {
+              "Date": {
+                "type": "string",
+                "default": "Thu, 27 Oct 2022 23:39:24 GMT"
+              },
+              "Content-Length": {
+                "type": "string",
+                "default": "118"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reserve": {
+      "post": {
+        "summary": "Зарезервировать деньги1",
+        "tags": [
+          "Misc"
+        ],
+        "operationId": "Зарезервироватьденьги1",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Body",
+            "in": "body",
+            "required": true,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/%D0%97%D0%B0%D1%80%D0%B5%D0%B7%D0%B5%D1%80%D0%B2%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D1%82%D1%8C%D0%B4%D0%B5%D0%BD%D1%8C%D0%B3%D0%B8Request1"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/%D0%97%D0%B0%D1%80%D0%B5%D0%B7%D0%B5%D1%80%D0%B2%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D1%82%D1%8C%D0%B4%D0%B5%D0%BD%D1%8C%D0%B3%D0%B8%28%D0%BD%D0%B5%D0%B4%D0%BE%D1%81%D1%82%D0%B0%D1%82%D0%BE%D1%87%D0%BD%D0%BE%D0%B4%D0%B5%D0%BD%D0%B5%D0%B3%D0%BD%D0%B0%D1%83%D1%81%D0%BB%D1%83%D0%B3%D1%83%29115"
+            },
+            "examples": {
+              "application/json": {
+                "data": null,
+                "error": {
+                  "message": "Not enough money",
+                  "code": 400,
+                  "fields": null
+                }
+              }
+            },
+            "headers": {
+              "Date": {
+                "type": "string",
+                "default": "Thu, 27 Oct 2022 23:40:14 GMT"
+              },
+              "Content-Length": {
+                "type": "string",
+                "default": "77"
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/%D0%97%D0%B0%D1%80%D0%B5%D0%B7%D0%B5%D1%80%D0%B2%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D1%82%D1%8C%D0%B4%D0%B5%D0%BD%D1%8C%D0%B3%D0%B8116"
+            },
+            "examples": {
+              "application/json": {
+                "data": {
+                  "id": 1,
+                  "user_id": 1,
+                  "order_id": 1,
+                  "service_id": 1,
+                  "value": 200,
+                  "created_at": "2022-10-27T23:40:47.028563614Z",
+                  "is_debited": false
+                },
+                "error": null
+              }
+            },
+            "headers": {
+              "Date": {
+                "type": "string",
+                "default": "Thu, 27 Oct 2022 23:40:46 GMT"
+              },
+              "Content-Length": {
+                "type": "string",
+                "default": "147"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reserve/approve": {
+      "post": {
+        "summary": "Списать деньги с резервного счёта2",
+        "tags": [
+          "Misc"
+        ],
+        "operationId": "Списатьденьгисрезервногосчёта2",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Body",
+            "in": "body",
+            "required": true,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/%D0%A1%D0%BF%D0%B8%D1%81%D0%B0%D1%82%D1%8C%D0%B4%D0%B5%D0%BD%D1%8C%D0%B3%D0%B8%D1%81%D1%80%D0%B5%D0%B7%D0%B5%D1%80%D0%B2%D0%BD%D0%BE%D0%B3%D0%BE%D1%81%D1%87%D1%91%D1%82%D0%B0Request2"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/%D0%A1%D0%BF%D0%B8%D1%81%D0%B0%D1%82%D1%8C%D0%B4%D0%B5%D0%BD%D1%8C%D0%B3%D0%B8%D1%81%D1%80%D0%B5%D0%B7%D0%B5%D1%80%D0%B2%D0%BD%D0%BE%D0%B3%D0%BE%D1%81%D1%87%D1%91%D1%82%D0%B0%28%D1%81%D1%83%D0%BC%D0%BC%D1%8B%D1%80%D0%B0%D0%B7%D0%BB%D0%B8%D1%87%D0%B0%D1%8E%D1%82%D1%81%D1%8F%29118"
+            },
+            "examples": {
+              "application/json": {
+                "data": null,
+                "error": {
+                  "message": "Reserved sum not equals entered sum",
+                  "code": 400,
+                  "fields": null
+                }
+              }
+            },
+            "headers": {
+              "Date": {
+                "type": "string",
+                "default": "Thu, 27 Oct 2022 23:41:07 GMT"
+              },
+              "Content-Length": {
+                "type": "string",
+                "default": "96"
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/%D0%A1%D0%BF%D0%B8%D1%81%D0%B0%D1%82%D1%8C%D0%B4%D0%B5%D0%BD%D1%8C%D0%B3%D0%B8%D1%81%D1%80%D0%B5%D0%B7%D0%B5%D1%80%D0%B2%D0%BD%D0%BE%D0%B3%D0%BE%D1%81%D1%87%D1%91%D1%82%D0%B0119"
+            },
+            "examples": {
+              "application/json": {
+                "data": {
+                  "id": 1,
+                  "user_id": 1,
+                  "order_id": 1,
+                  "service_id": 1,
+                  "value": 200,
+                  "created_at": "2022-10-27T23:40:47.028564Z",
+                  "is_debited": true
+                },
+                "error": null
+              }
+            },
+            "headers": {
+              "Date": {
+                "type": "string",
+                "default": "Thu, 27 Oct 2022 23:41:33 GMT"
+              },
+              "Content-Length": {
+                "type": "string",
+                "default": "143"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/report/create": {
+      "get": {
+        "summary": "Сформировать отчёт",
+        "tags": [
+          "Misc"
+        ],
+        "operationId": "Сформироватьотчёт",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "year",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32",
+            "description": ""
+          },
+          {
+            "name": "month",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/%D0%A1%D1%84%D0%BE%D1%80%D0%BC%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D1%82%D1%8C%D0%BE%D1%82%D1%87%D1%91%D1%82%28%D0%BD%D0%B5%D1%83%D0%BA%D0%B0%D0%B7%D0%B0%D0%BD%D1%8B%D0%BF%D0%B0%D1%80%D0%B0%D0%BC%D0%B5%D1%82%D1%80%D1%8B%291111"
+            },
+            "examples": {
+              "application/json": {
+                "data": null,
+                "error": {
+                  "message": "Incorrect year: strconv.Atoi: parsing \"\": invalid syntax",
+                  "code": 500,
+                  "fields": null
+                }
+              }
+            },
+            "headers": {
+              "Date": {
+                "type": "string",
+                "default": "Thu, 27 Oct 2022 23:43:52 GMT"
+              },
+              "Content-Length": {
+                "type": "string",
+                "default": "119"
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/%D0%A1%D1%84%D0%BE%D1%80%D0%BC%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D1%82%D1%8C%D0%BE%D1%82%D1%87%D1%91%D1%8211111"
+            },
+            "examples": {
+              "application/json": {
+                "data": {
+                  "url": "localhost:3000/report/2022-10_services_report.csv"
+                },
+                "error": null
+              }
+            },
+            "headers": {
+              "Date": {
+                "type": "string",
+                "default": "Thu, 27 Oct 2022 23:44:22 GMT"
+              },
+              "Content-Length": {
+                "type": "string",
+                "default": "81"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/report/2022-10_services_report.csv": {
+      "get": {
+        "summary": "Скачать отчёт1",
+        "tags": [
+          "Misc"
+        ],
+        "operationId": "Скачатьотчёт1",
+        "deprecated": false,
+        "produces": [
+          "application/json",
+          "text/plain; charset=utf-8"
+        ],
+        "parameters": [],
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/%D0%A1%D0%BA%D0%B0%D1%87%D0%B0%D1%82%D1%8C%D0%BE%D1%82%D1%87%D1%91%D1%82%28404%291"
+            },
+            "examples": {
+              "application/json": {
+                "data": null,
+                "error": {
+                  "message": "Report not found",
+                  "code": 404,
+                  "fields": null
+                }
+              }
+            },
+            "headers": {
+              "Date": {
+                "type": "string",
+                "default": "Thu, 27 Oct 2022 23:44:49 GMT"
+              },
+              "Content-Length": {
+                "type": "string",
+                "default": "77"
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "string",
+              "default": ""
+            },
+            "examples": {
+              "text/plain; charset=utf-8": "Название услуги,Общая сумма выручки за отчётный период\n200.00,cleaning\n"
+            },
+            "headers": {
+              "Date": {
+                "type": "string",
+                "default": "Thu, 27 Oct 2022 23:45:38 GMT"
+              },
+              "Content-Length": {
+                "type": "string",
+                "default": "118"
+              },
+              "Content-Disposition": {
+                "type": "string",
+                "default": "attachment; filename=\"2022-10_services_report.csv\""
+              },
+              "Accept-Ranges": {
+                "type": "string",
+                "default": "bytes"
+              },
+              "Last-Modified": {
+                "type": "string",
+                "default": "Thu, 27 Oct 2022 23:45:35 GMT"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/balance/1/operations": {
+      "get": {
+        "summary": "Список операций пользователя",
+        "tags": [
+          "Misc"
+        ],
+        "operationId": "Списокоперацийпользователя",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32",
+            "description": ""
+          },
+          {
+            "name": "per-page",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32",
+            "description": ""
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "sort-dir",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/%D0%A1%D0%BF%D0%B8%D1%81%D0%BE%D0%BA%D0%BE%D0%BF%D0%B5%D1%80%D0%B0%D1%86%D0%B8%D0%B9%D0%BF%D0%BE%D0%BB%D1%8C%D0%B7%D0%BE%D0%B2%D0%B0%D1%82%D0%B5%D0%BB%D1%8F11112"
+            },
+            "examples": {
+              "application/json": {
+                "data": [
+                  {
+                    "id": 1,
+                    "user_id": 1,
+                    "created_at": "2022-10-27T23:38:19.509367Z",
+                    "is_increase": true,
+                    "value": 100
+                  },
+                  {
+                    "id": 2,
+                    "user_id": 1,
+                    "created_at": "2022-10-27T23:38:24.188743Z",
+                    "is_increase": true,
+                    "value": 100
+                  },
+                  {
+                    "id": 4,
+                    "user_id": 1,
+                    "created_at": "2022-10-27T23:39:07.70768Z",
+                    "is_increase": true,
+                    "value": 100
+                  },
+                  {
+                    "id": 5,
+                    "user_id": 1,
+                    "created_at": "2022-10-27T23:41:34.040425Z",
+                    "is_increase": false,
+                    "value": 200
+                  }
+                ],
+                "error": null
+              }
+            },
+            "headers": {
+              "Date": {
+                "type": "string",
+                "default": "Thu, 27 Oct 2022 23:46:11 GMT"
+              },
+              "Content-Length": {
+                "type": "string",
+                "default": "403"
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/%D0%A1%D0%BF%D0%B8%D1%81%D0%BE%D0%BA%D0%BE%D0%BF%D0%B5%D1%80%D0%B0%D1%86%D0%B8%D0%B9%D0%BF%D0%BE%D0%BB%D1%8C%D0%B7%D0%BE%D0%B2%D0%B0%D1%82%D0%B5%D0%BB%D1%8F%28404%293"
+            },
+            "examples": {
+              "application/json": {
+                "data": null,
+                "error": {
+                  "message": "User not found",
+                  "code": 404,
+                  "fields": null
+                }
+              }
+            },
+            "headers": {
+              "Date": {
+                "type": "string",
+                "default": "Thu, 27 Oct 2022 23:47:06 GMT"
+              },
+              "Content-Length": {
+                "type": "string",
+                "default": "75"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Узнатьбаланс": {
+      "title": "Узнатьбаланс",
+      "example": {
+        "data": {
+          "id": 1,
+          "name": "",
+          "balance": 400
+        },
+        "error": null
+      },
+      "type": "object",
+      "properties": {
+        "data": {
+          "$ref": "#/definitions/Data"
+        },
+        "error": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "data",
+        "error"
+      ]
+    },
+    "Data": {
+      "title": "Data",
+      "example": {
+        "id": 1,
+        "name": "",
+        "balance": 400
+      },
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "type": "string"
+        },
+        "balance": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "balance"
+      ]
+    },
+    "Error": {
+      "title": "Error",
+      "example": {
+        "message": "User not found",
+        "code": 404,
+        "fields": null
+      },
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        },
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "fields": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "message",
+        "code",
+        "fields"
+      ]
+    },
+    "Узнатьбаланс(пользовательненайден)11": {
+      "title": "Узнатьбаланс(пользовательненайден)11",
+      "example": {
+        "data": null,
+        "error": {
+          "message": "User not found",
+          "code": 404,
+          "fields": null
+        }
+      },
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "string"
+        },
+        "error": {
+          "$ref": "#/definitions/Error"
+        }
+      },
+      "required": [
+        "data",
+        "error"
+      ]
+    },
+    "ПополнитьбалансRequest": {
+      "title": "ПополнитьбалансRequest",
+      "example": {
+        "id": 1,
+        "balance": 100
+      },
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "balance": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "required": [
+        "id",
+        "balance"
+      ]
+    },
+    "Пополнитьбаланс111": {
+      "title": "Пополнитьбаланс111",
+      "example": {
+        "data": {
+          "id": 1,
+          "name": "",
+          "balance": 300
+        },
+        "error": null
+      },
+      "type": "object",
+      "properties": {
+        "data": {
+          "$ref": "#/definitions/Data"
+        },
+        "error": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "data",
+        "error"
+      ]
+    },
+    "Error2": {
+      "title": "Error2",
+      "example": {
+        "message": "",
+        "code": 422,
+        "fields": [
+          {
+            "FailedField": "User.BalanceValue",
+            "Tag": "min",
+            "Value": "0"
+          }
+        ]
+      },
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        },
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Field"
+          }
+        }
+      },
+      "required": [
+        "message",
+        "code",
+        "fields"
+      ]
+    },
+    "Field": {
+      "title": "Field",
+      "example": {
+        "FailedField": "User.BalanceValue",
+        "Tag": "min",
+        "Value": "0"
+      },
+      "type": "object",
+      "properties": {
+        "FailedField": {
+          "type": "string"
+        },
+        "Tag": {
+          "type": "string"
+        },
+        "Value": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "FailedField",
+        "Tag",
+        "Value"
+      ]
+    },
+    "Пополнитьбаланс(отрицательноепополнение)113": {
+      "title": "Пополнитьбаланс(отрицательноепополнение)113",
+      "example": {
+        "data": null,
+        "error": {
+          "message": "",
+          "code": 422,
+          "fields": [
+            {
+              "FailedField": "User.BalanceValue",
+              "Tag": "min",
+              "Value": "0"
+            }
+          ]
+        }
+      },
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "string"
+        },
+        "error": {
+          "$ref": "#/definitions/Error2"
+        }
+      },
+      "required": [
+        "data",
+        "error"
+      ]
+    },
+    "ЗарезервироватьденьгиRequest1": {
+      "title": "ЗарезервироватьденьгиRequest1",
+      "example": {
+        "id": 1,
+        "service_id": 1,
+        "order_id": 1,
+        "price": 100
+      },
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "service_id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "order_id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "price": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "required": [
+        "id",
+        "service_id",
+        "order_id",
+        "price"
+      ]
+    },
+    "Зарезервироватьденьги(недостаточноденегнауслугу)115": {
+      "title": "Зарезервироватьденьги(недостаточноденегнауслугу)115",
+      "example": {
+        "data": null,
+        "error": {
+          "message": "Not enough money",
+          "code": 400,
+          "fields": null
+        }
+      },
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "string"
+        },
+        "error": {
+          "$ref": "#/definitions/Error"
+        }
+      },
+      "required": [
+        "data",
+        "error"
+      ]
+    },
+    "Зарезервироватьденьги116": {
+      "title": "Зарезервироватьденьги116",
+      "example": {
+        "data": {
+          "id": 1,
+          "user_id": 1,
+          "order_id": 1,
+          "service_id": 1,
+          "value": 200,
+          "created_at": "2022-10-27T23:40:47.028563614Z",
+          "is_debited": false
+        },
+        "error": null
+      },
+      "type": "object",
+      "properties": {
+        "data": {
+          "$ref": "#/definitions/Data2"
+        },
+        "error": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "data",
+        "error"
+      ]
+    },
+    "Data2": {
+      "title": "Data2",
+      "example": {
+        "id": 1,
+        "user_id": 1,
+        "order_id": 1,
+        "service_id": 1,
+        "value": 200,
+        "created_at": "2022-10-27T23:40:47.028563614Z",
+        "is_debited": false
+      },
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "user_id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "order_id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "service_id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "value": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "is_debited": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "user_id",
+        "order_id",
+        "service_id",
+        "value",
+        "created_at",
+        "is_debited"
+      ]
+    },
+    "СписатьденьгисрезервногосчётаRequest2": {
+      "title": "СписатьденьгисрезервногосчётаRequest2",
+      "example": {
+        "id": 1,
+        "service_id": 1,
+        "order_id": 1,
+        "sum": 100
+      },
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "service_id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "order_id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "sum": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "required": [
+        "id",
+        "service_id",
+        "order_id",
+        "sum"
+      ]
+    },
+    "Списатьденьгисрезервногосчёта(суммыразличаются)118": {
+      "title": "Списатьденьгисрезервногосчёта(суммыразличаются)118",
+      "example": {
+        "data": null,
+        "error": {
+          "message": "Reserved sum not equals entered sum",
+          "code": 400,
+          "fields": null
+        }
+      },
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "string"
+        },
+        "error": {
+          "$ref": "#/definitions/Error"
+        }
+      },
+      "required": [
+        "data",
+        "error"
+      ]
+    },
+    "Списатьденьгисрезервногосчёта119": {
+      "title": "Списатьденьгисрезервногосчёта119",
+      "example": {
+        "data": {
+          "id": 1,
+          "user_id": 1,
+          "order_id": 1,
+          "service_id": 1,
+          "value": 200,
+          "created_at": "2022-10-27T23:40:47.028564Z",
+          "is_debited": true
+        },
+        "error": null
+      },
+      "type": "object",
+      "properties": {
+        "data": {
+          "$ref": "#/definitions/Data2"
+        },
+        "error": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "data",
+        "error"
+      ]
+    },
+    "Сформироватьотчёт(неуказаныпараметры)1111": {
+      "title": "Сформироватьотчёт(неуказаныпараметры)1111",
+      "example": {
+        "data": null,
+        "error": {
+          "message": "Incorrect year: strconv.Atoi: parsing \"\": invalid syntax",
+          "code": 500,
+          "fields": null
+        }
+      },
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "string"
+        },
+        "error": {
+          "$ref": "#/definitions/Error"
+        }
+      },
+      "required": [
+        "data",
+        "error"
+      ]
+    },
+    "Сформироватьотчёт11111": {
+      "title": "Сформироватьотчёт11111",
+      "example": {
+        "data": {
+          "url": "localhost:3000/report/2022-10_services_report.csv"
+        },
+        "error": null
+      },
+      "type": "object",
+      "properties": {
+        "data": {
+          "$ref": "#/definitions/Data4"
+        },
+        "error": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "data",
+        "error"
+      ]
+    },
+    "Data4": {
+      "title": "Data4",
+      "example": {
+        "url": "localhost:3000/report/2022-10_services_report.csv"
+      },
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "url"
+      ]
+    },
+    "Скачатьотчёт(404)1": {
+      "title": "Скачатьотчёт(404)1",
+      "example": {
+        "data": null,
+        "error": {
+          "message": "Report not found",
+          "code": 404,
+          "fields": null
+        }
+      },
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "string"
+        },
+        "error": {
+          "$ref": "#/definitions/Error"
+        }
+      },
+      "required": [
+        "data",
+        "error"
+      ]
+    },
+    "Списокоперацийпользователя11112": {
+      "title": "Списокоперацийпользователя11112",
+      "example": {
+        "data": [
+          {
+            "id": 1,
+            "user_id": 1,
+            "created_at": "2022-10-27T23:38:19.509367Z",
+            "is_increase": true,
+            "value": 100
+          },
+          {
+            "id": 2,
+            "user_id": 1,
+            "created_at": "2022-10-27T23:38:24.188743Z",
+            "is_increase": true,
+            "value": 100
+          },
+          {
+            "id": 4,
+            "user_id": 1,
+            "created_at": "2022-10-27T23:39:07.70768Z",
+            "is_increase": true,
+            "value": 100
+          },
+          {
+            "id": 5,
+            "user_id": 1,
+            "created_at": "2022-10-27T23:41:34.040425Z",
+            "is_increase": false,
+            "value": 200
+          }
+        ],
+        "error": null
+      },
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Data5"
+          }
+        },
+        "error": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "data",
+        "error"
+      ]
+    },
+    "Data5": {
+      "title": "Data5",
+      "example": {
+        "id": 1,
+        "user_id": 1,
+        "created_at": "2022-10-27T23:38:19.509367Z",
+        "is_increase": true,
+        "value": 100
+      },
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "user_id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "is_increase": {
+          "type": "boolean"
+        },
+        "value": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "required": [
+        "id",
+        "user_id",
+        "created_at",
+        "is_increase",
+        "value"
+      ]
+    },
+    "Списокоперацийпользователя(404)3": {
+      "title": "Списокоперацийпользователя(404)3",
+      "example": {
+        "data": null,
+        "error": {
+          "message": "User not found",
+          "code": 404,
+          "fields": null
+        }
+      },
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "string"
+        },
+        "error": {
+          "$ref": "#/definitions/Error"
+        }
+      },
+      "required": [
+        "data",
+        "error"
+      ]
+    }
+  },
+  "tags": [
+    {
+      "name": "Misc",
+      "description": ""
+    }
+  ]
+}
