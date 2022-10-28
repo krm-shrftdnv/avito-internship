@@ -8,7 +8,7 @@
     cd avito-internship
     cp ./.template.env .env
 ```
-2. Меняем значения переменных среды при желании
+2. Меняем значения переменных среды (при желании)
 3. 
 ```shell
     docker-compose up --build
