@@ -1,7 +1,8 @@
 # Тестовое задание на позицию стажёра-бэкендера
 
 **Инструкция по запуску**
-1. 
+
+1.
 ```shell
     git clone https://github.com/krm-shrftdnv/avito-internship.git
     cd avito-internship
